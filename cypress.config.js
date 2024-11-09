@@ -15,7 +15,7 @@ module.exports = defineConfig({
 
         try {
           const report = await merge(options);
-          console.log(report);
+          console.log('Merged report:', report);
           await generate.create(report, {
             reportDir: 'mochawesome-report',
             reportFilename: 'mochawesome-report',
