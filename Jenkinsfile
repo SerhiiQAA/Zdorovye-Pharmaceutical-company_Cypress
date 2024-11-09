@@ -17,8 +17,10 @@ pipeline {
                 script {
                     if (isUnix()) {
                         sh 'npm install'
+                        sh 'npx cypress install'
                     } else {
                         bat 'npm install'
+                        bat 'npx cypress install'
                     }
                 }
             }
