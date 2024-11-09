@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/SerhiiQAA/Zdorovye-Pharmaceutical-company_Cypress.git'
+                git branch: 'main', url: 'https://github.com/SerhiiQAA/Zdorovye-Pharmaceutical-company_Cypress.git'
             }
         }
 
@@ -28,9 +28,6 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
-            archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
-            junit 'cypress/results/*.xml'
             cleanWs()
         }
     }
