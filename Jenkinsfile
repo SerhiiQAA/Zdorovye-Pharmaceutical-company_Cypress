@@ -1,54 +1,36 @@
 pipeline {
     agent any
 
-    environment {
-        CYPRESS_CACHE_FOLDER = "$HOME/.cache/Cypress"
+    tools {
+        nodejs 'Node' // Ім'я NodeJS установки, яке ви налаштували у Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/SerhiiQAA/Zdorovye-Pharmaceutical-company_Cypress.git'
+                git branch: 'master', url: 'https://github.com/SerhiiQAA/Zdorovye-Pharmaceutical-company_Cypress.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Cypress') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm install'
-                        sh 'npx cypress install'
-                    } else {
-                        bat 'npm install'
-                        bat 'npx cypress install'
-                    }
-                }
+                sh 'npm install'
+                sh 'npx cypress install'
             }
         }
 
         stage('Run Cypress Tests') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npx cypress run'
-                    } else {
-                        bat 'npx cypress run'
-                    }
-                }
-            }
-        }
-
-        stage('Archive Results') {
-            steps {
-                archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
-                archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
-                junit 'cypress/results/*.xml'
+                sh 'npx cypress run'
             }
         }
     }
 
     post {
         always {
+            archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
+            junit 'cypress/results/*.xml'
             cleanWs()
         }
     }
