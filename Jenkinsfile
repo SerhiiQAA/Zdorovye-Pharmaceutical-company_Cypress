@@ -15,8 +15,8 @@ pipeline {
         stage('Install Cypress') {
             steps {
                 sh 'npm install'
-                sh 'npx cypress install'
                 sh 'npm install --save-dev cypress-mochawesome-reporter'
+                sh 'npx cypress install'
             }
         }
 
@@ -27,15 +27,18 @@ pipeline {
         }
     }
 
-    post { always { 
-        archiveArtifacts artifacts: 'mochawesome-report/*.html', allowEmptyArchive: true 
-        publishHTML([ 
-        allowMissing: false, 
-        alwaysLinkToLastBuild: true, 
-        keepAll: true, reportDir: 'mochawesome-report', 
-        reportFiles: 'mochawesome.html', 
-        reportName: 'Cypress Test Report' 
-    ]) 
-    cleanWs() }
+    post {
+        always {
+            archiveArtifacts artifacts: 'cypress/mochawesome-report/*.html', allowEmptyArchive: true
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'cypress/mochawesome-report',
+                reportFiles: '*.html',
+                reportName: 'Cypress Test Report'
+            ])
+            cleanWs()
+        }
     }
 }
