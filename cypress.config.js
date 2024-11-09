@@ -1,11 +1,10 @@
 const { defineConfig } = require("cypress");
-const { merge } = require('mochawesome-merge');
-const generate = require('mochawesome-report-generator');
+const { generate } = require('mochawesome-report-generator');
 
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      // Merge mochawesome reports after all tests are done
+      // Генерація HTML звіту після завершення всіх тестів
       on('after:run', async (results) => {
         const options = {
           files: [
@@ -14,15 +13,10 @@ module.exports = defineConfig({
         };
 
         try {
-          const report = await merge(options);
-          console.log('Merged report:', report);
-          await generate.create(report, {
-            reportDir: 'mochawesome-report',
-            reportFilename: 'mochawesome-report',
-          });
-          console.log('HTML report generated');
+          const report = await generate(options);
+          console.log('HTML report generated:', report);
         } catch (error) {
-          console.error('Error merging and generating mochawesome reports:', error);
+          console.error('Error generating mochawesome HTML reports:', error);
         }
       });
     },
@@ -30,9 +24,10 @@ module.exports = defineConfig({
     reporter: 'mochawesome',
     reporterOptions: {
       reportDir: 'mochawesome-report',
-      overwrite: true,  // перезаписує існуючі звіти
+      overwrite: true, // перезаписує існуючі звіти
       html: true,
-      json: false,  // не створює JSON звіти
+      json: false, // не створює JSON звіти
     }
   },
 });
+
