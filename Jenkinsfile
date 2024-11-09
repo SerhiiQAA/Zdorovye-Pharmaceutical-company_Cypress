@@ -16,6 +16,7 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npx cypress install'
+                sh 'npm install --save-dev cypress-mochawesome-reporter'
             }
         }
 
@@ -26,9 +27,15 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            cleanWs()
-        }
+    post { always { 
+        archiveArtifacts artifacts: 'mochawesome-report/*.html', allowEmptyArchive: true 
+        publishHTML([ 
+        allowMissing: false, 
+        alwaysLinkToLastBuild: true, 
+        keepAll: true, reportDir: 'mochawesome-report', 
+        reportFiles: 'mochawesome.html', 
+        reportName: 'Cypress Test Report' 
+    ]) 
+    cleanWs() }
     }
 }
